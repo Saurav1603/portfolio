@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "degree": "B.Tech – Computer Science & Engineering (Artificial Intelligence)",
+    "institution": "Noida Institute of Engineering and Technology, Greater Noida",
+    "duration": "2023 – 2027",
+    "type": "Bachelor's Degree"
+  },
+  {
+    "id": 2,
+    "degree": "Diploma – Computer Science & Engineering",
+    "institution": "Government Polytechnic, Muzaffarpur",
+    "duration": "2020 – 2023",
+    "type": "Diploma"
+  },
+  {
+    "id": 3,
+    "degree": "Senior Secondary (Class XII)",
+    "institution": "Chandrasheel Vidyapeeth, Muzaffarpur",
+    "duration": "2021 – 2022",
+    "type": "High School"
+  },
+  {
+    "id": 4,
+    "degree": "Secondary (Class X)",
+    "institution": "Primus Public School, Muzaffarpur",
+    "duration": "2019 – 2020",
+    "type": "High School"
+  }
+]

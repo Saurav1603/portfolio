@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "role": "AIML Intern",
+    "company": "YBI Foundation",
+    "duration": "Jun 2024 – Jul 2024",
+    "description": [
+      "Developed machine learning models for real-world data analysis",
+      "Built a Movie Recommendation System using collaborative filtering"
+    ],
+    "skills": ["Machine Learning", "Python", "Data Analysis", "Collaborative Filtering"]
+  },
+  {
+    "id": 2,
+    "role": "Android Developer Intern",
+    "company": "GOWOX Infotech Pvt. Ltd",
+    "duration": "Dec 2022 – Jan 2023",
+    "description": [
+      "Designed responsive UI using Android Studio and XML",
+      "Improved performance and user experience"
+    ],
+    "skills": ["Android Studio", "XML", "Java", "UI/UX Design"]
+  }
+]

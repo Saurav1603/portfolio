@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "title": "Movie Recommendation System",
+    "year": "2024",
+    "description": "A machine learning project that recommends movies based on user preferences using collaborative filtering techniques. The system analyzes user behavior patterns and movie ratings to provide personalized recommendations.",
+    "techStack": ["Python", "Pandas", "NumPy", "Scikit-learn", "Machine Learning"],
+    "github": "https://github.com/Saurav1603/Movie-recommendation-system",
+    "demo": null,
+    "image": null,
+    "featured": true
+  },
+  {
+    "id": 2,
+    "title": "Stock Price Predictor",
+    "year": "2024",
+    "description": "An LSTM-based deep learning model trained on historical time-series stock data to predict future stock prices. The model uses recurrent neural networks to capture temporal patterns in market data.",
+    "techStack": ["Python", "TensorFlow", "Keras", "LSTM", "Deep Learning", "Streamlit"],
+    "github": "https://github.com/Saurav1603/stock_predictor_app",
+    "demo": null,
+    "image": null,
+    "featured": true
+  }
+]
