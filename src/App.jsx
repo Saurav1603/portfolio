@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import CursorSpotlight from './components/CursorSpotlight';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
@@ -82,8 +83,13 @@ function App() {
             transition={{ duration: 0.5 }}
             className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           >
+            <CursorSpotlight />
+            <div className="noise-overlay" aria-hidden="true" />
+            <a href="#main-content" className="skip-link">
+              Skip to content
+            </a>
             <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
-            <main>
+            <main id="main-content" tabIndex={-1}>
               <Hero />
               <About />
               <Skills />

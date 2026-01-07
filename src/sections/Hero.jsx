@@ -1,9 +1,12 @@
+import { Suspense, lazy } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ArrowDown, Github, Mail, MapPin, Linkedin, Sparkles } from 'lucide-react';
+import { ArrowDown, Github, Mail, MapPin, Sparkles } from 'lucide-react';
 import TypingAnimation from '../components/TypingAnimation';
-import AnimatedBackground from '../components/AnimatedBackground';
 import MagneticButton from '../components/MagneticButton';
-import { AnimatedText } from '../utils/animations';
+import AnimatedText from '../components/AnimatedText';
+import GradientMesh from '../components/GradientMesh';
+
+const AnimatedBackground = lazy(() => import('../components/AnimatedBackground'));
 
 const Hero = () => {
   const roles = ['Software Engineer', 'AI/ML Engineer', 'Full Stack Developer', 'Problem Solver'];
@@ -11,6 +14,9 @@ const Hero = () => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const floatYSlow = useTransform(scrollY, [0, 600], [0, -30]);
+  const floatYMid = useTransform(scrollY, [0, 600], [0, -55]);
+  const floatYFast = useTransform(scrollY, [0, 600], [0, -80]);
   
   const scrollToAbout = () => {
     const element = document.querySelector('#about');
@@ -26,9 +32,14 @@ const Hero = () => {
     >
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
+
+      {/* Gradient mesh layer */}
+      <GradientMesh />
       
       {/* Animated Background */}
-      <AnimatedBackground variant="hero" />
+      <Suspense fallback={null}>
+        <AnimatedBackground variant="hero" />
+      </Suspense>
       
       {/* 3D Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -44,7 +55,7 @@ const Hero = () => {
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-          style={{ perspective: '1000px' }}
+          style={{ perspective: '1000px', y: floatYSlow }}
         >
           <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl backdrop-blur-sm border border-white/20 dark:border-white/10" />
         </motion.div>
@@ -62,7 +73,9 @@ const Hero = () => {
             ease: 'easeInOut',
           }}
         >
-          <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full backdrop-blur-sm border border-white/20 dark:border-white/10" />
+          <motion.div style={{ y: floatYMid }}>
+            <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full backdrop-blur-sm border border-white/20 dark:border-white/10" />
+          </motion.div>
         </motion.div>
         
         <motion.div
@@ -78,7 +91,9 @@ const Hero = () => {
             ease: 'easeInOut',
           }}
         >
-          <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl backdrop-blur-sm border border-white/20 dark:border-white/10 transform rotate-45" />
+          <motion.div style={{ y: floatYFast }}>
+            <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl backdrop-blur-sm border border-white/20 dark:border-white/10 transform rotate-45" />
+          </motion.div>
         </motion.div>
       </div>
 

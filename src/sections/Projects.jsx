@@ -1,16 +1,17 @@
-import { motion } from 'framer-motion';
-import { Github, ExternalLink, Brain, TrendingUp, Star } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Github, ExternalLink, Brain, TrendingUp, Star, X } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import TiltCard from '../components/TiltCard';
-import { staggerContainer, fadeInUp } from '../utils/animations';
 import projectsData from '../data/projects.json';
+import GradientMesh from '../components/GradientMesh';
 
 const projectIcons = {
   1: Brain,
   2: TrendingUp,
 };
 
-const ProjectCard = ({ project, index }) => {
+const ProjectCard = ({ project, index, onOpenDetails }) => {
   const Icon = projectIcons[project.id] || Brain;
 
   return (
@@ -21,8 +22,8 @@ const ProjectCard = ({ project, index }) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="h-full"
     >
-      <TiltCard className="h-full" intensity={10}>
-        <div className="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 h-full border border-gray-100 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700">
+      <TiltCard className="h-full" intensity={12} glare depth={26}>
+  <div className="group surface-3d ring-3d hover-lift glossy rounded-2xl overflow-hidden transition-all duration-500 h-full hover:border-blue-300 dark:hover:border-blue-700">
           {/* Project Header with 3D effect */}
           <div className="relative h-40 sm:h-52 bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 p-4 sm:p-6 flex items-center justify-center overflow-hidden">
             {/* Animated background pattern */}
@@ -110,6 +111,16 @@ const ProjectCard = ({ project, index }) => {
                 <Github size={14} className="sm:w-4 sm:h-4" />
                 <span>Code</span>
               </motion.a>
+              <motion.button
+                type="button"
+                onClick={() => onOpenDetails(project)}
+                className="flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-200 rounded-lg text-xs sm:text-sm font-medium hover:border-blue-500 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label={`Open details for ${project.title}`}
+              >
+                <span>Details</span>
+              </motion.button>
               {project.demo && (
                 <motion.a
                   href={project.demo}
@@ -131,9 +142,169 @@ const ProjectCard = ({ project, index }) => {
   );
 };
 
-const Projects = () => {
+const ProjectModal = ({ project, onClose }) => {
+  const titleId = useMemo(() => (project ? `project-title-${project.id}` : 'project-title'), [project]);
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    if (!project) return;
+
+    const previousActive = document.activeElement;
+    const html = document.documentElement;
+    const prevOverflow = html.style.overflow;
+    html.style.overflow = 'hidden';
+
+    // Focus close button for keyboard/screen reader users.
+    closeButtonRef.current?.focus();
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (e.key !== 'Tab') return;
+      const root = dialogRef.current;
+      if (!root) return;
+
+      const focusables = root.querySelectorAll(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (!focusables.length) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      html.style.overflow = prevOverflow;
+      previousActive?.focus?.();
+    };
+  }, [project, onClose]);
+
+  if (!project) return null;
+
   return (
-    <section id="projects" className="section-padding bg-white dark:bg-gray-900">
+    <AnimatePresence>
+      <motion.div
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        aria-hidden={false}
+      >
+        {/* Backdrop */}
+        <motion.button
+          type="button"
+          className="absolute inset-0 bg-black/50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          aria-label="Close project details"
+        />
+
+        {/* Dialog */}
+        <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          className="relative w-full max-w-2xl rounded-2xl surface-3d ring-3d glossy overflow-hidden"
+          initial={{ opacity: 0, y: 20, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 10, scale: 0.98 }}
+          transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+        >
+          <div className="p-5 sm:p-6 border-b border-gray-200 dark:border-gray-800 flex items-start justify-between gap-4">
+            <div>
+              <h3 id={titleId} className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
+                {project.title}
+              </h3>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{project.year}</p>
+            </div>
+            <button
+              type="button"
+              ref={closeButtonRef}
+              onClick={onClose}
+              className="shrink-0 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="p-5 sm:p-6">
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{project.description}</p>
+
+            <div className="mt-5">
+              <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Tech stack</h4>
+              <div className="flex flex-wrap gap-2">
+                {project.techStack?.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-2 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-medium rounded-md"
+                  >
+                    {tech}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-700 text-white rounded-lg text-sm font-medium hover:bg-gray-800 dark:hover:bg-gray-600 transition-colors"
+              >
+                <Github size={16} />
+                <span>View Code</span>
+              </a>
+              {project.demo && (
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg text-sm font-medium hover:from-blue-700 hover:to-purple-700 transition-colors"
+                >
+                  <ExternalLink size={16} />
+                  <span>Live Demo</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+const Projects = () => {
+  const [activeProject, setActiveProject] = useState(null);
+
+  const openDetails = (project) => setActiveProject(project);
+  const closeDetails = () => setActiveProject(null);
+
+  return (
+    <section id="projects" className="section-padding bg-white dark:bg-gray-900 relative overflow-hidden">
+      <GradientMesh className="opacity-40" />
       <div className="container-custom">
         <SectionTitle
           title="Featured Projects"
@@ -142,7 +313,12 @@ const Projects = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
           {projectsData.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              onOpenDetails={openDetails}
+            />
           ))}
         </div>
 
@@ -167,6 +343,10 @@ const Projects = () => {
           </motion.a>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {activeProject && <ProjectModal project={activeProject} onClose={closeDetails} />}
+      </AnimatePresence>
     </section>
   );
 };

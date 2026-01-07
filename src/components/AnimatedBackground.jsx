@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import usePrefersReducedMotion from '../hooks/usePrefersReducedMotion';
 
-const ParticleField = () => {
+const ParticleField = ({ enabled }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [particles, setParticles] = useState([]);
+  const prefersReducedMotion = usePrefersReducedMotion();
   
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -12,16 +15,30 @@ const ParticleField = () => {
   }, []);
   
   // Reduce particles on mobile for performance
-  const particleCount = isMobile ? 15 : 50;
-  
-  const particles = Array.from({ length: particleCount }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    duration: Math.random() * 20 + 10,
-    delay: Math.random() * 5,
-  }));
+  const particleCount = isMobile ? 12 : 40;
+
+  useEffect(() => {
+    if (!enabled || prefersReducedMotion) {
+      setParticles([]);
+      return;
+    }
+
+    // Generate once per relevant change (not during render)
+    const next = Array.from({ length: particleCount }, (_, i) => {
+      const x = Math.random() * 100;
+      const y = Math.random() * 100;
+      const size = Math.random() * 4 + 2;
+      const duration = Math.random() * 20 + 10;
+      const delay = Math.random() * 5;
+      const drift = Math.random() * 20 - 10;
+      return { id: i, x, y, size, duration, delay, drift };
+    });
+    setParticles(next);
+  }, [enabled, prefersReducedMotion, particleCount]);
+
+  if (!enabled || prefersReducedMotion) {
+    return null;
+  }
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -37,7 +54,7 @@ const ParticleField = () => {
           }}
           animate={{
             y: [0, -30, 0],
-            x: [0, Math.random() * 20 - 10, 0],
+            x: [0, particle.drift, 0],
             opacity: [0.2, 0.5, 0.2],
             scale: [1, 1.2, 1],
           }}
@@ -54,6 +71,12 @@ const ParticleField = () => {
 };
 
 const FloatingOrbs = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return null;
+  }
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {/* Large gradient orbs - smaller on mobile */}
@@ -116,6 +139,12 @@ const FloatingOrbs = () => {
 };
 
 const GlowingGrid = () => {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
+  if (prefersReducedMotion) {
+    return null;
+  }
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30 dark:opacity-20">
       <div 
@@ -137,7 +166,7 @@ const AnimatedBackground = ({ variant = 'default' }) => {
     <>
       <GlowingGrid />
       <FloatingOrbs />
-      {variant === 'hero' && <ParticleField />}
+      {variant === 'hero' && <ParticleField enabled />}
     </>
   );
 };

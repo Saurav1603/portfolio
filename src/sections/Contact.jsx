@@ -14,7 +14,6 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [focusedField, setFocusedField] = useState(null);
   
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -139,13 +138,13 @@ const Contact = () => {
             {/* Contact Info Cards */}
             <div className="space-y-4">
               {contactInfo.map((info, index) => (
-                <TiltCard key={info.label} intensity={5}>
+                <TiltCard key={info.label} intensity={8} glare depth={22}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: index * 0.1 }}
-                    className="flex items-center space-x-4 p-5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-750 transition-all border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 group"
+                    className="flex items-center space-x-4 p-5 rounded-xl transition-all group surface-3d ring-3d hover-lift"
                   >
                     <motion.div 
                       className="p-3 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl text-white shadow-lg"
@@ -208,8 +207,8 @@ const Contact = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <TiltCard intensity={3}>
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700">
+            <TiltCard intensity={7} glare depth={24}>
+              <div className="rounded-2xl p-8 surface-3d ring-3d">
                 <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>

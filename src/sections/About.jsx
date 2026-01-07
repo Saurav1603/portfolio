@@ -83,8 +83,8 @@ const About = () => {
               />
               
               {/* Main card */}
-              <TiltCard intensity={8}>
-                <div className="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
+              <TiltCard intensity={10} glare depth={24}>
+                <div className="relative surface-3d ring-3d hover-lift glossy rounded-3xl p-8">
                   <div className="text-center">
                     {/* Avatar */}
                     <motion.div 
