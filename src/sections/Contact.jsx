@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, Phone, MapPin, Send, Github, Linkedin, CheckCircle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { Mail, Phone, MapPin, Send, Github, Linkedin, CheckCircle, Sparkles } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import TiltCard from '../components/TiltCard';
+import MagneticButton from '../components/MagneticButton';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +14,15 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [focusedField, setFocusedField] = useState(null);
+  
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '20%']);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,8 +87,30 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="section-padding bg-white dark:bg-gray-900">
-      <div className="container-custom">
+    <section id="contact" className="section-padding bg-white dark:bg-gray-900 relative overflow-hidden" ref={sectionRef}>
+      {/* Animated background elements */}
+      <motion.div 
+        className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"
+        style={{ y: backgroundY }}
+      />
+      <motion.div 
+        className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"
+        style={{ y: backgroundY }}
+      />
+      
+      {/* Floating decorative elements */}
+      <motion.div
+        className="absolute top-40 right-20 w-3 h-3 bg-blue-400 rounded-full opacity-50"
+        animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
+        transition={{ duration: 5, repeat: Infinity }}
+      />
+      <motion.div
+        className="absolute bottom-40 left-20 w-2 h-2 bg-purple-400 rounded-full opacity-50"
+        animate={{ y: [0, 20, 0], x: [0, -10, 0] }}
+        transition={{ duration: 4, repeat: Infinity }}
+      />
+      
+      <div className="container-custom relative">
         <SectionTitle
           title="Get In Touch"
           subtitle="Have a project in mind or want to collaborate? Let's connect!"
@@ -106,35 +139,40 @@ const Contact = () => {
             {/* Contact Info Cards */}
             <div className="space-y-4">
               {contactInfo.map((info, index) => (
-                <motion.div
-                  key={info.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors"
-                >
-                  <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl text-white">
-                    <info.icon size={24} />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {info.label}
-                    </p>
-                    {info.href ? (
-                      <a
-                        href={info.href}
-                        className="text-gray-900 dark:text-white font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                      >
-                        {info.value}
-                      </a>
-                    ) : (
-                      <p className="text-gray-900 dark:text-white font-medium">
-                        {info.value}
+                <TiltCard key={info.label} intensity={5}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    className="flex items-center space-x-4 p-5 bg-gray-50 dark:bg-gray-800 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-750 transition-all border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 group"
+                  >
+                    <motion.div 
+                      className="p-3 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl text-white shadow-lg"
+                      whileHover={{ scale: 1.1, rotate: 5 }}
+                      transition={{ type: 'spring', stiffness: 300 }}
+                    >
+                      <info.icon size={24} />
+                    </motion.div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {info.label}
                       </p>
-                    )}
-                  </div>
-                </motion.div>
+                      {info.href ? (
+                        <a
+                          href={info.href}
+                          className="text-gray-900 dark:text-white font-medium hover:text-blue-600 dark:hover:text-blue-400 transition-colors group-hover:text-blue-600 dark:group-hover:text-blue-400"
+                        >
+                          {info.value}
+                        </a>
+                      ) : (
+                        <p className="text-gray-900 dark:text-white font-medium">
+                          {info.value}
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                </TiltCard>
               ))}
             </div>
 
@@ -145,18 +183,19 @@ const Contact = () => {
               </p>
               <div className="flex space-x-4">
                 {socialLinks.map((social) => (
-                  <motion.a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-3 bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-blue-500 hover:text-white dark:hover:bg-blue-500 transition-all"
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.9 }}
-                    aria-label={social.label}
-                  >
-                    <social.icon size={24} />
-                  </motion.a>
+                  <MagneticButton key={social.label} intensity={0.3}>
+                    <motion.a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-4 bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all shadow-md hover:shadow-lg block"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      aria-label={social.label}
+                    >
+                      <social.icon size={24} />
+                    </motion.a>
+                  </MagneticButton>
                 ))}
               </div>
             </div>
@@ -169,7 +208,9 @@ const Contact = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <TiltCard intensity={3}>
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 border border-gray-100 dark:border-gray-700">
+                <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label
@@ -271,7 +312,9 @@ const Contact = () => {
                   </>
                 )}
               </motion.button>
-            </form>
+                </form>
+              </div>
+            </TiltCard>
           </motion.div>
         </div>
       </div>

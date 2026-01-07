@@ -1,9 +1,16 @@
-import { motion } from 'framer-motion';
-import { ArrowDown, Github, Mail, MapPin, Linkedin } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowDown, Github, Mail, MapPin, Linkedin, Sparkles } from 'lucide-react';
 import TypingAnimation from '../components/TypingAnimation';
+import AnimatedBackground from '../components/AnimatedBackground';
+import MagneticButton from '../components/MagneticButton';
+import { AnimatedText } from '../utils/animations';
 
 const Hero = () => {
   const roles = ['Software Engineer', 'AI/ML Engineer', 'Full Stack Developer', 'Problem Solver'];
+  
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   
   const scrollToAbout = () => {
     const element = document.querySelector('#about');
@@ -20,52 +27,81 @@ const Hero = () => {
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
       
-      {/* Animated background shapes */}
-      <div className="absolute inset-0 overflow-hidden">
+      {/* Animated Background */}
+      <AnimatedBackground variant="hero" />
+      
+      {/* 3D Floating Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute -top-40 -right-40 w-80 h-80 bg-blue-400/20 dark:bg-blue-600/10 rounded-full blur-3xl"
+          className="absolute top-20 left-10 w-20 h-20 md:w-32 md:h-32"
           animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
+            y: [0, -20, 0],
+            rotateY: [0, 180, 360],
+            rotateX: [0, 10, 0],
           }}
           transition={{
-            duration: 8,
+            duration: 6,
             repeat: Infinity,
             ease: 'easeInOut',
           }}
-        />
+          style={{ perspective: '1000px' }}
+        >
+          <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl backdrop-blur-sm border border-white/20 dark:border-white/10" />
+        </motion.div>
+        
         <motion.div
-          className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-400/20 dark:bg-purple-600/10 rounded-full blur-3xl"
+          className="absolute top-40 right-20 w-16 h-16 md:w-24 md:h-24"
           animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.5, 0.3, 0.5],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        />
-        <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-400/10 dark:bg-cyan-600/5 rounded-full blur-3xl"
-          animate={{
+            y: [0, 30, 0],
+            rotateZ: [0, 90, 0],
             scale: [1, 1.1, 1],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        >
+          <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-full backdrop-blur-sm border border-white/20 dark:border-white/10" />
+        </motion.div>
+        
+        <motion.div
+          className="absolute bottom-40 left-1/4 w-12 h-12 md:w-20 md:h-20"
+          animate={{
+            y: [0, -40, 0],
+            x: [0, 20, 0],
             rotate: [0, 180, 360],
           }}
           transition={{
-            duration: 20,
+            duration: 10,
             repeat: Infinity,
-            ease: 'linear',
+            ease: 'easeInOut',
           }}
-        />
+        >
+          <div className="w-full h-full bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-xl backdrop-blur-sm border border-white/20 dark:border-white/10 transform rotate-45" />
+        </motion.div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <motion.div 
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+        style={{ y, opacity }}
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="inline-flex items-center space-x-2 px-4 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-full border border-gray-200 dark:border-gray-700 mb-6 shadow-lg"
+          >
+            <Sparkles className="w-4 h-4 text-yellow-500" />
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Available for opportunities</span>
+          </motion.div>
+          
           {/* Greeting */}
           <motion.p
             className="text-blue-600 dark:text-blue-400 text-lg md:text-xl font-medium mb-4"
@@ -171,7 +207,7 @@ const Hero = () => {
         >
           <ArrowDown size={32} />
         </motion.button>
-      </div>
+      </motion.div>
     </section>
   );
 };

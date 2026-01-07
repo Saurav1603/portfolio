@@ -1,8 +1,18 @@
-import { motion } from 'framer-motion';
-import { Code2, Brain, Rocket, Coffee, Download, MapPin, GraduationCap, Briefcase } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRef } from 'react';
+import { Code2, Brain, Rocket, Coffee, Download, MapPin, GraduationCap, Briefcase, Sparkles } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import TiltCard from '../components/TiltCard';
+import AnimatedCounter from '../components/AnimatedCounter';
 
 const About = () => {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
   const highlights = [
     {
       icon: Code2,
@@ -33,8 +43,18 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="section-padding bg-white dark:bg-gray-900">
-      <div className="container-custom">
+    <section id="about" className="section-padding bg-white dark:bg-gray-900 relative overflow-hidden" ref={sectionRef}>
+      {/* Animated background elements */}
+      <motion.div 
+        className="absolute top-20 right-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"
+        style={{ y: backgroundY }}
+      />
+      <motion.div 
+        className="absolute bottom-20 left-10 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"
+        style={{ y: backgroundY }}
+      />
+      
+      <div className="container-custom relative">
         <SectionTitle
           title="About Me"
           subtitle="Passionate about building intelligent solutions that make a difference"
@@ -51,21 +71,36 @@ const About = () => {
           >
             <div className="relative w-full max-w-md mx-auto lg:sticky lg:top-24">
               {/* Background decoration */}
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl transform rotate-6 scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-3xl transform -rotate-3 scale-105" />
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl transform rotate-6 scale-105"
+                animate={{ rotate: [6, 8, 6] }}
+                transition={{ duration: 5, repeat: Infinity }}
+              />
+              <motion.div 
+                className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-cyan-500/20 rounded-3xl transform -rotate-3 scale-105"
+                animate={{ rotate: [-3, -5, -3] }}
+                transition={{ duration: 6, repeat: Infinity }}
+              />
               
               {/* Main card */}
-              <div className="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
-                <div className="text-center">
-                  {/* Avatar */}
-                  <motion.div 
-                    className="w-36 h-36 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 p-1 shadow-2xl"
-                    whileHover={{ scale: 1.05 }}
-                  >
-                    <div className="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
-                      <span className="text-5xl font-bold gradient-text">SR</span>
-                    </div>
-                  </motion.div>
+              <TiltCard intensity={8}>
+                <div className="relative bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-xl border border-gray-100 dark:border-gray-700">
+                  <div className="text-center">
+                    {/* Avatar */}
+                    <motion.div 
+                      className="w-36 h-36 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 p-1 shadow-2xl relative"
+                      whileHover={{ scale: 1.05 }}
+                    >
+                      {/* Animated ring */}
+                      <motion.div
+                        className="absolute inset-0 rounded-full border-2 border-blue-400/50"
+                        animate={{ scale: [1, 1.1, 1], opacity: [0.5, 0, 0.5] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      />
+                      <div className="w-full h-full rounded-full bg-white dark:bg-gray-800 flex items-center justify-center">
+                        <span className="text-5xl font-bold gradient-text">SR</span>
+                      </div>
+                    </motion.div>
                   
                   <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                     Saurav Raj
@@ -105,15 +140,18 @@ const About = () => {
                   <motion.a
                     href="/resume.pdf"
                     download
-                    className="inline-flex items-center justify-center space-x-2 w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl"
+                    className="inline-flex items-center justify-center space-x-2 w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl relative overflow-hidden group"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
+                    {/* Shimmer effect */}
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                     <Download size={18} />
                     <span>Download Resume</span>
                   </motion.a>
                 </div>
               </div>
+            </TiltCard>
             </div>
           </motion.div>
 
@@ -161,29 +199,32 @@ const About = () => {
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {highlights.map((item, index) => (
-                  <motion.div
-                    key={item.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                    whileHover={{ scale: 1.03, y: -5 }}
-                    className="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-all group shadow-sm hover:shadow-md"
-                  >
-                    <div className="flex items-start space-x-4">
-                      <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors">
-                        <item.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  <TiltCard key={item.title} intensity={5}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                      className="p-5 bg-gradient-to-br from-gray-50 to-white dark:from-gray-800 dark:to-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-blue-200 dark:hover:border-blue-800 transition-all group shadow-sm hover:shadow-lg h-full"
+                    >
+                      <div className="flex items-start space-x-4">
+                        <motion.div 
+                          className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 transition-colors"
+                          whileHover={{ scale: 1.1, rotate: 5 }}
+                        >
+                          <item.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                        </motion.div>
+                        <div>
+                          <h5 className="font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                            {item.title}
+                          </h5>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {item.description}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h5 className="font-semibold text-gray-900 dark:text-white mb-1">
-                          {item.title}
-                        </h5>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </TiltCard>
                 ))}
               </div>
             </div>
