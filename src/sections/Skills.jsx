@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
-import { Code, Server, Database, Wrench, BookOpen, Sparkles } from 'lucide-react';
+import { Code, Server, Database, Wrench, BookOpen } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import TiltCard from '../components/TiltCard';
-// Removed unused variants to keep lint clean
 import skillsData from '../data/skills.json';
 
 const categoryIcons = {

@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import ScrollProgress from './components/ScrollProgress';
 import CursorSpotlight from './components/CursorSpotlight';
 import Hero from './sections/Hero';
 import About from './sections/About';
@@ -12,6 +13,7 @@ import Experience from './sections/Experience';
 import Education from './sections/Education';
 import Achievements from './sections/Achievements';
 import Contact from './sections/Contact';
+import GitHubStats from './components/GitHubStats';
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -83,6 +85,7 @@ function App() {
             transition={{ duration: 0.5 }}
             className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           >
+            <ScrollProgress />
             <CursorSpotlight />
             <div className="noise-overlay" aria-hidden="true" />
             <a href="#main-content" className="skip-link">
@@ -97,6 +100,7 @@ function App() {
               <Experience />
               <Education />
               <Achievements />
+              <GitHubStats />
               <Contact />
             </main>
             <Footer />
