@@ -33,7 +33,7 @@ const About = () => {
   };
 
   return (
-    <section id="about" className="section-padding bg-white dark:bg-gray-900 relative overflow-hidden">
+    <section id="about" className="section-padding bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm relative overflow-hidden">
       <div className="container-custom relative">
         <SectionTitle
           title="About Me"

@@ -1,11 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
-const WaveTerrain = () => {
+const WaveTerrain = ({ darkMode = false }) => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const materialRef = useRef(null);
+  const starsMaterialRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Update colors when darkMode changes
+  useEffect(() => {
+    if (materialRef.current) {
+      materialRef.current.color.setHex(darkMode ? 0x60A5FA : 0x3B82F6);
+      materialRef.current.opacity = darkMode ? 0.7 : 0.5;
+    }
+    if (starsMaterialRef.current) {
+      starsMaterialRef.current.color.setHex(darkMode ? 0xA78BFA : 0x8B5CF6);
+      starsMaterialRef.current.opacity = darkMode ? 0.9 : 0.6;
+    }
+  }, [darkMode]);
 
   useEffect(() => {
     // Detect mobile device
@@ -49,11 +63,12 @@ const WaveTerrain = () => {
 
     // Material with wireframe and gradient colors
     const material = new THREE.MeshBasicMaterial({
-      color: 0x3B82F6, // Blue
+      color: darkMode ? 0x60A5FA : 0x3B82F6,
       wireframe: true,
       transparent: true,
-      opacity: 0.6,
+      opacity: darkMode ? 0.7 : 0.5,
     });
+    materialRef.current = material;
 
     // Create mesh
     const plane = new THREE.Mesh(geometry, material);
@@ -71,11 +86,12 @@ const WaveTerrain = () => {
 
     starsGeometry.setAttribute('position', new THREE.BufferAttribute(starsPositions, 3));
     const starsMaterial = new THREE.PointsMaterial({
-      color: 0x8B5CF6, // Purple
+      color: darkMode ? 0xA78BFA : 0x8B5CF6,
       size: 0.5,
       transparent: true,
-      opacity: 0.8,
+      opacity: darkMode ? 0.9 : 0.6,
     });
+    starsMaterialRef.current = starsMaterial;
     const stars = new THREE.Points(starsGeometry, starsMaterial);
     scene.add(stars);
 
@@ -172,8 +188,15 @@ const WaveTerrain = () => {
   return (
     <div
       ref={mountRef}
-      className="absolute inset-0 w-full h-full pointer-events-none"
-      style={{ zIndex: 0 }}
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: -1,
+        pointerEvents: 'none'
+      }}
     />
   );
 };

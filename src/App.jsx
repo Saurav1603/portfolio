@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
 import ScrollProgress from './components/ScrollProgress';
 import CursorSpotlight from './components/CursorSpotlight';
+import WaveTerrain from './components/WaveTerrain';
 import Hero from './sections/Hero';
 import About from './sections/About';
 import Skills from './sections/Skills';
@@ -83,8 +84,12 @@ function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+            className={`min-h-screen text-gray-900 dark:text-gray-100 ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}
           >
+            {/* Fixed 3D Background */}
+            <div className="fixed inset-0 z-0">
+              <WaveTerrain darkMode={darkMode} />
+            </div>
             <ScrollProgress />
             <CursorSpotlight />
             <div className="noise-overlay" aria-hidden="true" />

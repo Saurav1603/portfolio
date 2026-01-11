@@ -7,7 +7,7 @@ import GradientMesh from '../components/GradientMesh';
 
 const Projects = () => {
   return (
-    <section id="projects" className="section-padding bg-white dark:bg-gray-900 relative overflow-hidden">
+    <section id="projects" className="section-padding bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm relative overflow-hidden">
       <GradientMesh className="opacity-40" />
       <div className="container-custom">
         <SectionTitle

@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 import { Download, Github, Linkedin, Twitter, ArrowDown } from 'lucide-react';
 import GradientMesh from '../components/GradientMesh';
 import TypingAnimation from '../components/TypingAnimation';
-import WaveTerrain from '../components/WaveTerrain';
 
 const Hero = () => {
   const roles = [
@@ -61,15 +60,6 @@ const Hero = () => {
       id="home"
       className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-cyan-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900" />
-      
-      {/* Three.js Wave Terrain Background */}
-      <WaveTerrain />
-      
-      {/* Semi-transparent overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-white/40 dark:via-gray-900/40 dark:to-gray-900/60 z-[1]" />
-      
       {/* Gradient mesh layer */}
       <GradientMesh />
       

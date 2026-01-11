@@ -61,7 +61,7 @@ const GitHubStats = ({ username = 'Saurav1603' }) => {
   }
 
   return (
-    <section id="github" className="section-padding bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
+    <section id="github" className="section-padding bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-sm relative overflow-hidden">
       <div className="container-custom">
         <div className="flex items-center space-x-3 mb-8">
           <Github size={32} className="text-gray-900 dark:text-white" />

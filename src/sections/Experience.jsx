@@ -129,7 +129,7 @@ const Experience = () => {
   const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%']);
 
   return (
-    <section id="experience" className="section-padding bg-gray-50 dark:bg-gray-900 relative overflow-hidden" ref={containerRef}>
+    <section id="experience" className="section-padding bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-sm relative overflow-hidden" ref={containerRef}>
       {/* Animated background elements */}
       <motion.div 
         className="absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl"

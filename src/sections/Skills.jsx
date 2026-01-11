@@ -149,7 +149,7 @@ const Skills = () => {
   const categories = Object.keys(skillsData);
 
   return (
-    <section id="skills" className="section-padding bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
+    <section id="skills" className="section-padding bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-sm relative overflow-hidden">
       {/* Background decorations - hidden on mobile for performance */}
       <div className="hidden sm:block absolute top-20 left-10 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
       <div className="hidden sm:block absolute bottom-20 right-10 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />

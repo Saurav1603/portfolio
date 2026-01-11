@@ -72,10 +72,19 @@ html {
 }
 
 @layer base {
-  body {
+  html {
     background-color: rgb(249 250 251);
+    transition: background-color 300ms;
+  }
+
+  html.dark {
+    background-color: rgb(17 24 39);
+  }
+
+  body {
+    background-color: transparent;
     color: rgb(17 24 39);
-    transition: background-color 300ms, color 300ms;
+    transition: color 300ms;
     margin: 0;
     min-width: 320px;
     font-family: var(--font-family);
@@ -84,7 +93,6 @@ html {
   }
 
   .dark body {
-    background-color: rgb(17 24 39);
     color: rgb(249 250 251);
   }
 

@@ -56,7 +56,7 @@ const EducationCard = ({ education, index }) => {
 
 const Education = () => {
   return (
-    <section id="education" className="section-padding bg-white dark:bg-gray-900">
+    <section id="education" className="section-padding bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm relative overflow-hidden">
       <div className="container-custom">
         <SectionTitle
           title="Education"

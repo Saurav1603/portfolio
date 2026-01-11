@@ -71,7 +71,7 @@ const AchievementCard = ({ achievement, index }) => {
 
 const Achievements = () => {
   return (
-    <section id="achievements" className="section-padding bg-gray-50 dark:bg-gray-900">
+    <section id="achievements" className="section-padding bg-gray-100/50 dark:bg-gray-800/50 backdrop-blur-sm relative overflow-hidden">
       <div className="container-custom">
         <SectionTitle
           title="Achievements"
